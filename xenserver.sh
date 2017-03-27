@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#xenserver SNMP custom agent
+#xenserver SNMP custom agent, using XenAPI
 
 # Host UUID
 
@@ -25,10 +25,9 @@ array_cpu_info=($cpu_info)
 
 for key in "${!array_cpu_info[@]}"
 do
-	IFS=': '
-	attr=(${array_cpu_info[$key]})
-
-	printf "${attr[0]}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'; echo : "${attr[1]}"
+    IFS=': '
+    attr=(${array_cpu_info[$key]})
+    printf "${attr[0]}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'; echo : "${attr[1]}"
 done
 
 # Host CPU Utilisation
@@ -40,7 +39,7 @@ array_cpu=($cpu_host)
 
 for key in "${!array_cpu[@]}"
 do
-	echo cpu$key: $(xe host-cpu-param-get uuid="${array_cpu[$key]}" param-name=utilisation)
+    echo cpu$key: $(xe host-cpu-param-get uuid="${array_cpu[$key]}" param-name=utilisation)
 done
 
 # VMs on Host
@@ -52,12 +51,12 @@ array_vm=($vm_host)
 
 for key in "${!array_vm[@]}"
 do
-	echo vm$key: $(xe vm-param-get uuid="${array_vm[$key]}" param-name=name-label)
-	echo vm$key: $(xe vm-param-get uuid="${array_vm[$key]}" param-name=VCPUs-number)
-	echo vm$key: $(xe vm-param-get uuid="${array_vm[$key]}" param-name=VCPUs-utilisation --minimal)
-  echo vm$key: $(xe vm-param-get uuid="${array_vm[$key]}" param-name=memory-actual)
-  echo vm$key: $(xe vm-param-get uuid="${array_vm[$key]}" param-name=power-state)
-  echo vm$key: $(xe vm-param-get uuid="${array_vm[$key]}" param-name=os-version)
-	echo vm$key: $(xe vm-param-get uuid="${array_vm[$key]}" param-name=networks)
-	echo ''
+    echo vm$key: $(xe vm-param-get uuid="${array_vm[$key]}" param-name=name-label)
+    echo vm$key: $(xe vm-param-get uuid="${array_vm[$key]}" param-name=VCPUs-number)
+    echo vm$key: $(xe vm-param-get uuid="${array_vm[$key]}" param-name=VCPUs-utilisation --minimal)
+    echo vm$key: $(xe vm-param-get uuid="${array_vm[$key]}" param-name=memory-actual)
+    echo vm$key: $(xe vm-param-get uuid="${array_vm[$key]}" param-name=power-state)
+    echo vm$key: $(xe vm-param-get uuid="${array_vm[$key]}" param-name=os-version)
+    echo vm$key: $(xe vm-param-get uuid="${array_vm[$key]}" param-name=networks)
+    echo ''
 done
